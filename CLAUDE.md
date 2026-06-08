@@ -28,8 +28,10 @@ Easy-Switch in hardware — **this tool owns only the video-input switch.**
 
 **Gate resolved → Path B. Phases 0–3 complete and live-verified. Remaining: Phase 4
 (pytest suite against the fixtures).** Phase 3 hotkey: `scripts/toggle-monitors.sh`
-(repo-relative launcher wrapping `op run … .venv/bin/soft-kvm toggle`, doubles as a
-Raycast command); see `docs/PHASE3_HOTKEY.md`. Public repo:
+(repo-relative launcher; runs the CLI directly using the Keychain-cached access token —
+no `op run`/Touch ID on the common path — and falls back to `op run` only on exit code 3
+when a refresh is needed; doubles as a Raycast command); see `docs/PHASE3_HOTKEY.md`.
+Public repo:
 `github.com/NotYoCheese/soft-kvm` (fixtures use placeholder IDs; live `config/monitors.toml`
 is gitignored).
 
@@ -67,6 +69,10 @@ Hard-won specifics (don't relearn):
 - App is an OAuth-In / API_ONLY app made via `smartthings apps:create` (the web
   Workspace can't set a redirect URI). client_id/secret in 1Password (`op run`).
 - Access token lifetime ~24h (`expires_in≈86399`); refresh tokens rotate every refresh.
+- Both the refresh token AND the access token (+expiry) are cached in the Keychain, so a
+  valid cached access token is reused without a refresh (no client creds / no `op run`).
+  A needed-but-unavailable refresh raises `CredentialsUnavailableError` → CLI exit code 3,
+  which `scripts/toggle-monitors.sh` uses to retry under `op run`.
 - Run normal commands via `op run --env-file .env -- uv run soft-kvm <cmd>` so the
   `op://` client creds resolve (a guard errors clearly if they don't).
 

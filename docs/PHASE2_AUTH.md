@@ -76,12 +76,13 @@ op run --env-file .env -- uv run soft-kvm toggle
 ```
 
 soft-kvm now uses OAuth automatically (the PAT remains a dev fallback). The access
-token is cached for its stated lifetime and refreshed on expiry **or** on a `401`;
-the refresh token is rotated and re-stored to the Keychain on every refresh.
+token is cached **in the Keychain** for its ~24 h lifetime, so most commands reuse it
+without a refresh — and without needing `op run`. A refresh (rotating + re-storing the
+refresh token) happens only when the cached token expires or a `401` forces it.
 
 ## Maintenance
 
 - Refresh tokens last ~30 days idle; daily use keeps them alive. If one expires,
   re-run `soft-kvm auth init`.
 - `soft-kvm auth status` — show whether creds + a stored refresh token are present.
-- `soft-kvm auth logout` — delete the stored refresh token from the Keychain.
+- `soft-kvm auth logout` — delete the stored refresh + access tokens from the Keychain.

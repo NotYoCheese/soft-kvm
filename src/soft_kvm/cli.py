@@ -15,9 +15,10 @@ Global ``--dry-run`` reports what would change without sending any command.
 from __future__ import annotations
 
 import secrets
+import time
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Annotated
+from typing import Annotated, NoReturn
 from urllib.parse import parse_qs, urlparse
 
 import typer
@@ -28,7 +29,7 @@ from . import __version__, auth, discovery, switcher
 from .client import build_client
 from .commands import build_command_body
 from .config import fixtures_dir, get_settings
-from .errors import SoftKvmError
+from .errors import CredentialsUnavailableError, SoftKvmError
 from .logging_setup import configure_logging
 from .models import INPUT_SOURCE_CAPABILITIES, DeviceList
 from .monitors import load_config
@@ -52,6 +53,13 @@ class AppState:
 def _state(ctx: typer.Context) -> AppState:
     assert isinstance(ctx.obj, AppState)
     return ctx.obj
+
+
+def _fail(exc: SoftKvmError) -> NoReturn:
+    """Print an error and exit. Exit code 3 signals the launcher to retry under `op run`."""
+    err_console.print(f"[bold red]Error:[/] {exc}")
+    code = 3 if isinstance(exc, CredentialsUnavailableError) else 1
+    raise typer.Exit(code=code) from exc
 
 
 def _version_callback(value: bool) -> None:
@@ -121,8 +129,7 @@ def _run_switch(ctx: typer.Context, target: str) -> None:
         with build_client(get_settings()) as client:
             summary = switcher.switch(client, config, target, dry_run=state.dry_run)
     except SoftKvmError as exc:
-        err_console.print(f"[bold red]Error:[/] {exc}")
-        raise typer.Exit(code=1) from exc
+        _fail(exc)
     _render_switch_summary(summary)
     if not summary.ok:
         raise typer.Exit(code=1)
@@ -162,8 +169,7 @@ def status_cmd() -> None:
         with build_client(get_settings()) as client:
             statuses = switcher.status(client, config)
     except SoftKvmError as exc:
-        err_console.print(f"[bold red]Error:[/] {exc}")
-        raise typer.Exit(code=1) from exc
+        _fail(exc)
     _render_status(statuses)
 
 
@@ -180,8 +186,7 @@ def toggle(ctx: typer.Context) -> None:
             console.print(f"Current: [bold]{now}[/] → switching to [bold]{target}[/]")
             summary = switcher.switch(client, config, target, dry_run=state.dry_run)
     except SoftKvmError as exc:
-        err_console.print(f"[bold red]Error:[/] {exc}")
-        raise typer.Exit(code=1) from exc
+        _fail(exc)
     _render_switch_summary(summary)
     if not summary.ok:
         raise typer.Exit(code=1)
@@ -224,8 +229,7 @@ def auth_init() -> None:
     try:
         settings.require_oauth()
     except SoftKvmError as exc:
-        err_console.print(f"[bold red]Error:[/] {exc}")
-        raise typer.Exit(code=1) from exc
+        _fail(exc)
 
     state = secrets.token_urlsafe(16)
     url = auth.build_authorize_url(settings, state)
@@ -243,8 +247,7 @@ def auth_init() -> None:
         code = _extract_code(pasted, state)
         tokens = auth.exchange_code(settings, code)
     except SoftKvmError as exc:
-        err_console.print(f"[bold red]Error:[/] {exc}")
-        raise typer.Exit(code=1) from exc
+        _fail(exc)
 
     console.print(
         f"[bold green]Authorized ✓[/] Refresh token stored in the macOS Keychain "
@@ -254,21 +257,28 @@ def auth_init() -> None:
 
 @auth_app.command("status")
 def auth_status() -> None:
-    """Show whether OAuth credentials and a stored refresh token are present."""
+    """Show OAuth credentials, the refresh token, and the cached access token."""
     settings = get_settings()
+    has_refresh = auth.load_refresh_token() is not None
     console.print(f"OAuth client credentials configured : {settings.has_oauth_credentials()}")
-    console.print(f"Refresh token stored in Keychain    : {auth.load_refresh_token() is not None}")
-    if auth.load_refresh_token() is None:
+    console.print(f"Refresh token stored in Keychain    : {has_refresh}")
+    cached = auth.load_access_token()
+    if cached is None:
+        console.print("Access token cached                 : no")
+    else:
+        minutes = int((cached[1] - time.time()) / 60)
+        state = f"valid ~{minutes} min" if minutes > 0 else "expired (refreshes on next use)"
+        console.print(f"Access token cached                 : yes ({state})")
+    if not has_refresh:
         console.print("[yellow]Run `soft-kvm auth init` to authorize.[/]")
 
 
 @auth_app.command("logout")
 def auth_logout() -> None:
-    """Delete the stored refresh token from the Keychain."""
-    if auth.clear_refresh_token():
-        console.print("Cleared the stored refresh token.")
-    else:
-        console.print("No refresh token was stored.")
+    """Delete the stored refresh + access tokens from the Keychain."""
+    cleared = auth.clear_refresh_token()
+    auth.clear_access_token()
+    console.print("Cleared stored tokens." if cleared else "No refresh token was stored.")
 
 
 # --------------------------------------------------------------------------- #
@@ -351,8 +361,7 @@ def discover() -> None:
         with build_client(get_settings()) as client:
             devices, findings = discovery.run_discovery(client, fixtures)
     except SoftKvmError as exc:
-        err_console.print(f"[bold red]Error:[/] {exc}")
-        raise typer.Exit(code=1) from exc
+        _fail(exc)
     _render_discovery(devices, findings, fixtures)
 
 
@@ -412,8 +421,7 @@ def test_switch(
         with build_client(get_settings()) as client:
             result = discovery.switch_and_verify(client, device_id, capability, source, fixtures)
     except SoftKvmError as exc:
-        err_console.print(f"[bold red]Error:[/] {exc}")
-        raise typer.Exit(code=1) from exc
+        _fail(exc)
 
     _render_switch(result)
     if not result.changed and not result.already_on_target:

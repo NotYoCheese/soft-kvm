@@ -61,15 +61,18 @@ def build_client(settings: Settings, *, timeout: float = DEFAULT_TIMEOUT) -> htt
     has been stored via ``soft-kvm auth init``); otherwise falls back to the Phase 0/1
     PAT. Raises :class:`ConfigError` if neither is available.
     """
-    if settings.has_oauth_credentials():
-        token_manager = TokenManager(settings)
-        if token_manager.has_refresh_token():
-            return httpx.Client(
-                base_url=settings.smartthings_api_base,
-                auth=_OAuthAuth(token_manager),
-                headers={"Accept": "application/json"},
-                timeout=timeout,
-            )
+    # Prefer OAuth whenever any token is stored: a still-valid cached access token works
+    # without the client credentials (no `op run`); a refresh only happens when it's
+    # expired, and then needs the credentials (raising CredentialsUnavailableError if
+    # unresolved — the launcher retries that under `op run`).
+    token_manager = TokenManager(settings)
+    if token_manager.has_refresh_token() or token_manager.has_cached_access_token():
+        return httpx.Client(
+            base_url=settings.smartthings_api_base,
+            auth=_OAuthAuth(token_manager),
+            headers={"Accept": "application/json"},
+            timeout=timeout,
+        )
 
     pat = settings.smartthings_pat
     if pat is not None and pat.get_secret_value():

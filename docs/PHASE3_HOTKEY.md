@@ -10,11 +10,14 @@ to the *other* target, so one key serves both directions.
 1. resolves the repo from its own location (no absolute paths baked in),
 2. prepends `/opt/homebrew/bin` to `PATH` (GUI launchers start with a minimal `PATH`,
    and `op` lives there),
-3. runs `op run --env-file .env -- .venv/bin/soft-kvm toggle`.
+3. runs `.venv/bin/soft-kvm toggle` **directly** — which reuses the access token cached
+   in the Keychain, so the common path needs **no `op run` and no Touch ID**,
+4. only if that exits `3` (cached token expired → a refresh is needed) does it retry
+   under `op run --env-file .env -- …`, so 1Password supplies the client credentials for
+   that one refresh.
 
-It calls the installed entry point (`.venv/bin/soft-kvm`) directly rather than
-`uv run`, shaving the per-invocation resolution. Pass an argument to override:
-`toggle-monitors.sh work` / `personal` / `status`.
+Calling the installed entry point directly (not `uv run`) also shaves the per-invocation
+resolution. Pass an argument to override: `toggle-monitors.sh work` / `personal` / `status`.
 
 ```bash
 # Test it (read-only, won't switch anything):
@@ -63,35 +66,34 @@ Advanced Launcher).
 
 ## What to expect (latency)
 
-A full verified two-monitor toggle is **~5 s warm** — and that's mostly the network,
-not the CLI:
+A full verified two-monitor toggle is **~3–4 s warm**, almost all of it the network:
 
 | Stage | ~Time |
 |-------|-------|
-| `op run` (warm) + CLI startup | ~0.8 s |
-| OAuth token refresh | ~0.5 s |
+| CLI startup | ~0.2 s |
 | Two monitors: read → set → **verify** (sequential) | ~3–4 s |
 
-The **first press after a while is slower** (~+3–4 s) as 1Password spins up its CLI
-session and may ask for Touch ID. You'll *see* the monitors flip — that's the real
-confirmation; the verify step just makes the CLI exit non-zero if one didn't take.
+Most presses use the cached access token, so they skip both `op run` and the token
+refresh. **~Once a day** the cached token expires: that press exits 3, retries under
+`op run` (≈ +0.6 s + a possible Touch ID + a ~0.5 s refresh), then proceeds. You'll
+*see* the monitors flip — the verify step just makes the CLI exit non-zero if one didn't.
 
 ## 1Password prompts
 
-`op run` asks for Touch ID only when the CLI session is locked; once unlocked it stays
-unlocked for a while (configurable in **1Password → Settings → Developer**). So you
-won't be prompted on every press. For a fully prompt-free hotkey you could use a
-1Password **service-account** token or move the client credentials into the Keychain —
-both trade some of the 1Password-managed safety, so only do that if the occasional
-Touch ID is bothersome.
+Because the access token is cached in the Keychain (valid ~24 h), the hotkey only
+touches 1Password when that token expires — **at most about once a day**, and even then
+only if the CLI session has locked. Most presses involve no `op run` and no Touch ID at
+all. You can stretch the session further under **1Password → Settings → Security →
+Auto-lock**.
 
 ## Want it snappier?
 
-The ~5 s is dominated by switching+verifying the two panels **sequentially**. Two
-optional speedups (ask and I'll add them):
+The remaining ~3–4 s is switching + verifying the two panels **sequentially**. The one
+optional speedup left (ask and I'll add it):
 
 - **Parallelize the two monitors** (concurrent switch + verify) — roughly halves the
   switch time. Requires making the token refresh thread-safe (a single mutex-guarded
   refresh) so concurrent requests don't race the rotating refresh token.
-- **Persist the access token in the Keychain** so most presses skip the ~0.5 s refresh
-  (and, when the cached token is still valid, can even run without `op run`).
+
+(The access token is already Keychain-cached, so presses already skip the refresh and
+usually `op run` entirely.)

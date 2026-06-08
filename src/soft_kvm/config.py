@@ -14,7 +14,7 @@ from pathlib import Path
 from pydantic import SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-from .errors import ConfigError
+from .errors import ConfigError, CredentialsUnavailableError
 
 
 class Settings(BaseSettings):
@@ -66,12 +66,17 @@ class Settings(BaseSettings):
         )
 
     def require_oauth(self) -> tuple[str, SecretStr]:
-        """Return (client_id, client_secret) or raise a clear, actionable error."""
+        """Return (client_id, client_secret), or raise CredentialsUnavailableError.
+
+        Raises :class:`CredentialsUnavailableError` (→ CLI exit code 3, the launcher's
+        signal to retry under ``op run``) when the credentials are absent or still look
+        like unresolved ``op://`` references.
+        """
         if not self.has_oauth_credentials():
-            raise ConfigError(
+            raise CredentialsUnavailableError(
                 "SMARTTHINGS_CLIENT_ID / SMARTTHINGS_CLIENT_SECRET are not set. Register an "
-                "OAuth app in the SmartThings Developer Workspace, then provide the credentials "
-                "via 1Password (`op run`) or a local `.env`. See docs/PHASE2_AUTH.md."
+                "OAuth app (see docs/PHASE2_AUTH.md), then provide the credentials via "
+                "1Password (`op run`) or a local `.env`."
             )
         # mypy: has_oauth_credentials() guarantees these are non-None.
         assert self.smartthings_client_id is not None
@@ -79,7 +84,7 @@ class Settings(BaseSettings):
         if self.smartthings_client_id.startswith(
             "op://"
         ) or self.smartthings_client_secret.get_secret_value().startswith("op://"):
-            raise ConfigError(
+            raise CredentialsUnavailableError(
                 "OAuth client credentials look like unresolved 1Password references (op://…). "
                 "Run the command through 1Password so they resolve, e.g.:\n"
                 "  op run --env-file .env -- uv run soft-kvm <command>"

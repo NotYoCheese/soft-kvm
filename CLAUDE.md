@@ -26,8 +26,12 @@ Easy-Switch in hardware — **this tool owns only the video-input switch.**
 
 ## Current status
 
-**Gate resolved → Path B. Phases 0–2 complete and live-verified. Remaining: Phase 3
-(hotkey binding) and Phase 4 (pytest suite against the fixtures).**
+**Gate resolved → Path B. Phases 0–3 complete and live-verified. Remaining: Phase 4
+(pytest suite against the fixtures).** Phase 3 hotkey: `scripts/toggle-monitors.sh`
+(repo-relative launcher wrapping `op run … .venv/bin/soft-kvm toggle`, doubles as a
+Raycast command); see `docs/PHASE3_HOTKEY.md`. Public repo:
+`github.com/NotYoCheese/soft-kvm` (fixtures use placeholder IDs; live `config/monitors.toml`
+is gitignored).
 
 Phase 1 commands (idempotent + verified):
 - `uv run soft-kvm status` — read each monitor's current input + mapped target.

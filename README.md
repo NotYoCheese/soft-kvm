@@ -4,11 +4,12 @@ Flip two **Samsung ViewFinity S9 5K** monitors between two Macs with one command
 by changing each monitor's **input source** over the network (SmartThings). The
 mouse/keyboard follow via Logitech Easy-Switch — this tool owns only the video switch.
 
-> **Status: Phases 0–2 complete (Path B / SmartThings Cloud API).**
+> **Status: Phases 0–3 complete (Path B / SmartThings Cloud API).**
 > `work` / `personal` / `status` / `toggle` are implemented, idempotent, and verified
 > (each switch is read back). Durable **OAuth** auth (authorization_code + refresh-token
-> rotation, Keychain-stored) is working — see `docs/PHASE2_AUTH.md`. Remaining: Phase 3
-> (hotkey binding) and Phase 4 (test suite). See `PROJECT_BRIEF.md` for the full plan,
+> rotation, Keychain-stored) is working — see `docs/PHASE2_AUTH.md`. A one-key hotkey
+> binding is set up via `scripts/toggle-monitors.sh` — see `docs/PHASE3_HOTKEY.md`.
+> Remaining: Phase 4 (test suite). See `PROJECT_BRIEF.md` for the full plan,
 > `docs/FINDINGS.md` for Phase 0 results, and `CLAUDE.md` for conventions.
 
 ## Why this exists
@@ -47,6 +48,18 @@ input is read back). If one monitor switches and the other doesn't, both states 
 reported and the command exits non-zero. Monitor deviceIds and the
 `target → source` mapping live in `config/monitors.toml` — copy it from
 `config/monitors.example.toml` (it's gitignored, since it holds your deviceIds).
+
+## Hotkey
+
+Bind one key to flip both monitors via `scripts/toggle-monitors.sh` (it wraps
+`op run … soft-kvm toggle`, resolves the repo from its own path, and doubles as a
+Raycast Script Command). Quickest path: add this `scripts/` folder to Raycast's script
+directories and record a hotkey for **Toggle Monitors**. Karabiner / Stream Deck work
+too. Full setup + latency notes: **`docs/PHASE3_HOTKEY.md`**.
+
+```bash
+scripts/toggle-monitors.sh status   # test the launcher (read-only)
+```
 
 ## Phase 0 — discovery
 

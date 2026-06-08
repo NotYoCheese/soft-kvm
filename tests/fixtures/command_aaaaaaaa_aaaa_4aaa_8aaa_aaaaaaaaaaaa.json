@@ -1,0 +1,22 @@
+{
+  "request": {
+    "commands": [
+      {
+        "component": "main",
+        "capability": "samsungvd.mediaInputSource",
+        "command": "setInputSource",
+        "arguments": [
+          "Display Port"
+        ]
+      }
+    ]
+  },
+  "response": {
+    "results": [
+      {
+        "id": "17362f13-7504-4a5d-9dcf-f596b61556e3",
+        "status": "COMPLETED"
+      }
+    ]
+  }
+}

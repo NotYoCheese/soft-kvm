@@ -1,0 +1,34 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# Secrets — never commit. The throwaway Phase 0 PAT and any OAuth client
+# credentials live here locally only.
+.env
+.env.*
+!.env.example
+
+# macOS
+.DS_Store
+
+# IDE / editor
+.idea/
+.vscode/
+*.swp
+
+# pytest / coverage / mypy caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Live monitor config holds your real deviceIds — keep local; commit only the example.
+config/monitors.toml

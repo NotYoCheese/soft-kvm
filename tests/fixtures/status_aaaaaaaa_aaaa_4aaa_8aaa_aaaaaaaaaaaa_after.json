@@ -1,0 +1,468 @@
+{
+  "components": {
+    "main": {
+      "mediaPlayback": {
+        "supportedPlaybackCommands": {
+          "value": [
+            "play",
+            "pause",
+            "stop",
+            "fastForward",
+            "rewind"
+          ],
+          "timestamp": "2026-06-06T19:59:09.203Z"
+        },
+        "playbackStatus": {
+          "value": null
+        }
+      },
+      "samsungvd.supportsPowerOnByOcf": {
+        "supportsPowerOnByOcf": {
+          "value": "true",
+          "timestamp": "2026-06-06T19:59:05.197Z"
+        }
+      },
+      "mediaInputSource": {
+        "supportedInputSources": {
+          "value": [],
+          "timestamp": "2026-06-06T19:59:09.203Z"
+        },
+        "inputSource": {
+          "value": null
+        }
+      },
+      "samsungvd.deviceCategory": {
+        "category": {
+          "value": "monitor",
+          "timestamp": "2026-06-06T19:59:05.851Z"
+        }
+      },
+      "switch": {
+        "switch": {
+          "value": "on",
+          "timestamp": "2026-06-08T12:07:45.745Z"
+        }
+      },
+      "ocf": {
+        "st": {
+          "value": "1970-01-01T00:00:58Z",
+          "timestamp": "2026-06-06T19:59:09.202Z"
+        },
+        "mndt": {
+          "value": "2023-01-01",
+          "timestamp": "2026-06-06T19:59:09.202Z"
+        },
+        "mnfv": {
+          "value": "T-OSCSCWWC-0090-2220.3",
+          "timestamp": "2026-06-06T19:59:09.202Z"
+        },
+        "mnhw": {
+          "value": "",
+          "timestamp": "2026-06-06T19:59:09.202Z"
+        },
+        "di": {
+          "value": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+          "timestamp": "2026-06-06T19:59:09.202Z"
+        },
+        "mnsl": {
+          "value": "",
+          "timestamp": "2026-06-06T19:59:09.202Z"
+        },
+        "dmv": {
+          "value": "res.1.1.0,sh.1.1.0",
+          "timestamp": "2026-06-06T19:59:09.202Z"
+        },
+        "n": {
+          "value": "27\" ViewFinity S9",
+          "timestamp": "2026-06-06T19:59:15.451Z"
+        },
+        "mnmo": {
+          "value": "LS27C900PANXZA",
+          "timestamp": "2026-06-06T19:59:09.202Z"
+        },
+        "vid": {
+          "value": "VD-SMONITOR-2023",
+          "timestamp": "2026-06-06T19:59:09.202Z"
+        },
+        "mnmn": {
+          "value": "Samsung Electronics",
+          "timestamp": "2026-06-06T19:59:09.202Z"
+        },
+        "mnml": {
+          "value": "",
+          "timestamp": "2026-06-06T19:59:09.202Z"
+        },
+        "mnpv": {
+          "value": "9.0",
+          "timestamp": "2026-06-06T19:59:09.202Z"
+        },
+        "mnos": {
+          "value": "Tizen",
+          "timestamp": "2026-06-06T19:59:09.202Z"
+        },
+        "pi": {
+          "value": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+          "timestamp": "2026-06-06T19:59:09.202Z"
+        },
+        "icv": {
+          "value": "core.1.1.0",
+          "timestamp": "2026-06-06T19:59:09.202Z"
+        }
+      },
+      "samsungvd.supportsFeatures": {
+        "mediaOutputSupported": {
+          "value": true,
+          "timestamp": "2026-06-06T19:59:11.622Z"
+        },
+        "imeAdvSupported": {
+          "value": true,
+          "timestamp": "2026-06-06T19:59:11.622Z"
+        },
+        "wifiUpdateSupport": {
+          "value": false,
+          "timestamp": "2026-06-06T19:59:11.622Z"
+        },
+        "executableServiceList": {
+          "value": [
+            "launchTVPlus"
+          ],
+          "timestamp": "2026-06-06T19:59:11.622Z"
+        },
+        "remotelessSupported": {
+          "value": false,
+          "timestamp": "2026-06-06T19:59:11.622Z"
+        },
+        "artSupported": {
+          "value": false,
+          "timestamp": "2026-06-06T19:59:11.622Z"
+        },
+        "mobileCamSupported": {
+          "value": true,
+          "timestamp": "2026-06-06T19:59:11.622Z"
+        }
+      },
+      "custom.accessibility": {},
+      "custom.disabledCapabilities": {
+        "disabledCapabilities": {
+          "value": [
+            "samsungvd.ambient",
+            "samsungvd.ambientContent",
+            "sec.wifiConfiguration"
+          ],
+          "timestamp": "2026-06-08T12:07:11.449Z"
+        }
+      },
+      "samsungvd.remoteControl": {},
+      "samsungvd.lightControl": {
+        "supportedModeMap": {
+          "value": null
+        },
+        "requestId": {
+          "value": null
+        },
+        "selectedMode": {
+          "value": null
+        },
+        "streamControl": {
+          "value": null
+        },
+        "selectedAppId": {
+          "value": null
+        },
+        "errorCode": {
+          "value": null
+        },
+        "supportedModes": {
+          "value": null
+        }
+      },
+      "custom.launchapp": {},
+      "samsungvd.thingStatus": {
+        "updatedTime": {
+          "value": 1780775947,
+          "timestamp": "2026-06-06T19:59:07.162Z"
+        },
+        "status": {
+          "value": "Idle",
+          "timestamp": "2026-06-06T19:59:07.162Z"
+        }
+      },
+      "samsungvd.firmwareVersion": {
+        "firmwareVersion": {
+          "value": "3.5.1",
+          "timestamp": "2026-06-06T19:59:05.851Z"
+        }
+      },
+      "audioVolume": {
+        "volume": {
+          "value": 23,
+          "unit": "%",
+          "timestamp": "2026-06-06T20:15:43.918Z"
+        }
+      },
+      "samsungvd.mediaInputSource": {
+        "supportedInputSourcesMap": {
+          "value": [
+            {
+              "id": "Display Port",
+              "name": "PC"
+            },
+            {
+              "id": "USB-C",
+              "name": "PC"
+            }
+          ],
+          "timestamp": "2026-06-08T17:20:08.400Z"
+        },
+        "inputSource": {
+          "value": "Display Port",
+          "timestamp": "2026-06-08T17:25:21.719Z"
+        }
+      },
+      "custom.tvsearch": {},
+      "samsungvd.ambient": {
+        "info": {
+          "value": {
+            "event": "get_setting_all",
+            "requestId": "f860eefc-6d15-4d6a-a5ed-39dbc2666d7b.1780777078242.f",
+            "data": {
+              "cn_music_visible": "off",
+              "bixby_greeting_visible": "off",
+              "daily_info": "on",
+              "family_info": "on",
+              "iot_home_summary": "on",
+              "music_widget": "on",
+              "tvplus": "off",
+              "food_widget": "on",
+              "iot_summary_visible": "on",
+              "iot_cam_visible": "off",
+              "iot_energy_visible": "off",
+              "food_widget_visible": "off",
+              "bg_content_name": "featured",
+              "music_visible": "on",
+              "program_reminder_visible": "off",
+              "remote_key_turn_on": "off",
+              "nextdoor": "on",
+              "samsungnews_widget": "on",
+              "hourly_onoff": "off",
+              "night_mode": "on",
+              "auto_adjustment": "on",
+              "background": "off",
+              "sleep_mode": "off",
+              "power_animation_hide": "off",
+              "google_photo_visible": "off",
+              "samsungnews_tts": "off",
+              "slide_time": "30",
+              "sensitivity": "1",
+              "display_time": "60",
+              "iot_familycare_visible": "off",
+              "iot_petcare_visible": "off",
+              "calendar_widget": "on",
+              "iot_sleepreport_visible": "off",
+              "iot_security_visible": "off",
+              "version": "1.24.421",
+              "preview_widget_list": {
+                "screen_item_count": 4,
+                "widget_order": [
+                  {
+                    "widget_type": "daily_info"
+                  },
+                  {
+                    "widget_type": "calendar_widget"
+                  },
+                  {
+                    "widget_type": "samsungnews_widget"
+                  },
+                  {
+                    "widget_type": "family_info"
+                  },
+                  {
+                    "widget_type": "music_widget"
+                  },
+                  {
+                    "widget_type": "iot_home_summary"
+                  },
+                  {
+                    "widget_type": "nextdoor"
+                  },
+                  {
+                    "widget_type": "food_widget"
+                  }
+                ]
+              },
+              "ambient_info_active": "off",
+              "voice": "off",
+              "current_mode": "widget",
+              "support_fullview": false,
+              "support_ultrasonic_sensor": false,
+              "support_timeout_auto": false,
+              "bixby_country": "en_US",
+              "sleep_mode_set_time": "21:00-07:00",
+              "ui_service_name": "daily_board",
+              "time_period": "afternoon",
+              "ultrasonic_sensor": "off",
+              "full_view_content_list": {},
+              "full_view_content": {
+                "page_name": "CLOCK_HORIZON"
+              },
+              "bg_content_support_list": [
+                "featured",
+                "none",
+                "blossom",
+                "tranquilnature",
+                "lighthouse",
+                "grassfields",
+                "islandflyover",
+                "oaktree",
+                "cozyroom",
+                "rainyday",
+                "fireplace",
+                "candlelight",
+                "breeze",
+                "sparkle",
+                "wish",
+                "window",
+                "forest",
+                "journey",
+                "forestcanopy",
+                "viewofsiurana",
+                "floatingspheres",
+                "spring",
+                "circleglass",
+                "clamshell",
+                "dreamscape",
+                "gentlewave",
+                "sequence",
+                "shadowplay",
+                "snowypeak"
+              ]
+            }
+          },
+          "timestamp": "2026-06-06T20:17:58.748Z"
+        }
+      },
+      "refresh": {},
+      "custom.error": {
+        "error": {
+          "value": null
+        }
+      },
+      "execute": {
+        "data": {
+          "value": null
+        }
+      },
+      "samsungvd.launchService": {},
+      "tvChannel": {
+        "tvChannel": {
+          "value": "",
+          "timestamp": "2026-06-08T17:20:08.568Z"
+        },
+        "tvChannelName": {
+          "value": "",
+          "timestamp": "2026-06-08T17:20:08.568Z"
+        }
+      },
+      "custom.picturemode": {
+        "pictureMode": {
+          "value": "Eco",
+          "timestamp": "2026-06-06T19:59:09.145Z"
+        },
+        "supportedPictureModes": {
+          "value": [
+            "BT.709",
+            "Custom 1",
+            "Custom 2",
+            "DCI-P3",
+            "Eco",
+            "Entertain",
+            "Graphic",
+            "sRGB"
+          ],
+          "timestamp": "2026-06-06T20:15:45.396Z"
+        },
+        "supportedPictureModesMap": {
+          "value": [
+            {
+              "id": "modeGen_327713",
+              "name": "BT.709"
+            },
+            {
+              "id": "modeGen_327715",
+              "name": "Custom 1"
+            },
+            {
+              "id": "modeGen_327716",
+              "name": "Custom 2"
+            },
+            {
+              "id": "modeGen_327714",
+              "name": "DCI-P3"
+            },
+            {
+              "id": "modeGen_458775",
+              "name": "Eco"
+            },
+            {
+              "id": "modeEntertainment",
+              "name": "Entertain"
+            },
+            {
+              "id": "modeStandardPC",
+              "name": "Graphic"
+            },
+            {
+              "id": "modeGen_327712",
+              "name": "sRGB"
+            }
+          ],
+          "timestamp": "2026-06-06T20:15:45.396Z"
+        }
+      },
+      "samsungvd.ambientContent": {
+        "supportedAmbientApps": {
+          "value": [],
+          "timestamp": "2026-06-06T19:59:09.203Z"
+        }
+      },
+      "custom.recording": {},
+      "custom.soundmode": {
+        "supportedSoundModesMap": {
+          "value": [
+            {
+              "id": "modeAmplify",
+              "name": "Amplify"
+            },
+            {
+              "id": "modeStandard",
+              "name": "Standard"
+            }
+          ],
+          "timestamp": "2026-06-06T19:59:09.253Z"
+        },
+        "soundMode": {
+          "value": "Standard",
+          "timestamp": "2026-06-06T19:59:09.253Z"
+        },
+        "supportedSoundModes": {
+          "value": [
+            "Amplify",
+            "Standard"
+          ],
+          "timestamp": "2026-06-06T19:59:09.253Z"
+        }
+      },
+      "audioMute": {
+        "mute": {
+          "value": "unmuted",
+          "timestamp": "2026-06-06T19:59:09.220Z"
+        }
+      },
+      "mediaTrackControl": {
+        "supportedTrackControlCommands": {
+          "value": null
+        }
+      }
+    }
+  }
+}

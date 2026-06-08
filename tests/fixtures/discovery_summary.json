@@ -1,0 +1,30 @@
+[
+  {
+    "label": "Left monitor",
+    "deviceId": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+    "capability": "samsungvd.mediaInputSource",
+    "current": "USB-C",
+    "supported": [
+      "Display Port",
+      "USB-C"
+    ],
+    "source_names": {
+      "Display Port": "PC",
+      "USB-C": "PC"
+    }
+  },
+  {
+    "label": "Right monitor",
+    "deviceId": "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb",
+    "capability": "samsungvd.mediaInputSource",
+    "current": "USB-C",
+    "supported": [
+      "Display Port",
+      "USB-C"
+    ],
+    "source_names": {
+      "Display Port": "PC",
+      "USB-C": "PC"
+    }
+  }
+]

@@ -1,0 +1,3 @@
+# Raw SmartThings API responses captured during Phase 0 discovery are saved
+# here and used as recorded mocks for the Phase 4 test suite (pytest-httpx).
+# Do NOT delete — these are the ground truth the unit tests run against.

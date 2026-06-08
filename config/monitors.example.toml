@@ -1,0 +1,30 @@
+# soft-kvm monitor configuration (NON-SECRET — safe to commit).
+#
+# This is a TEMPLATE. The real values are filled in AFTER Phase 0 discovery,
+# which reports each monitor's deviceId and the exact input-source name strings.
+# Copy to `config/monitors.toml` once discovery resolves the Path A/B gate.
+#
+# IMPORTANT: do not assume both monitors use identical source-name strings.
+# Phase 0 records them per-device; map each one explicitly.
+
+# Which capability Phase 0 found exposing the inputs.
+# Expected: "samsungvd.mediaInputSource" (verified in Phase 0).
+capability = "samsungvd.mediaInputSource"
+
+[[monitors]]
+name = "left"
+device_id = "REPLACE_WITH_DEVICE_ID"
+# Local IP is only needed for Path A (samsungtvws websocket fallback).
+# ip = "192.168.x.x"
+# target -> exact source-name string from this monitor's supportedInputSources
+[monitors.sources]
+personal = "REPLACE_WITH_THUNDERBOLT_SOURCE_NAME"  # M1 Max via CalDigit TS4 -> Thunderbolt 4
+work = "REPLACE_WITH_MINIDP_SOURCE_NAME"            # M5 Pro via USB-C->DP -> Mini DisplayPort
+
+[[monitors]]
+name = "right"
+device_id = "REPLACE_WITH_DEVICE_ID"
+# ip = "192.168.x.x"
+[monitors.sources]
+personal = "REPLACE_WITH_THUNDERBOLT_SOURCE_NAME"
+work = "REPLACE_WITH_MINIDP_SOURCE_NAME"

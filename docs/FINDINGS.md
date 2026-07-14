@@ -117,6 +117,32 @@ authoritative verification.
 - `tests/fixtures/status_aaaaaaaa_aaaa_4aaa_8aaa_aaaaaaaaaaaa_before.json` — Left monitor on `USB-C`
 - `tests/fixtures/status_aaaaaaaa_aaaa_4aaa_8aaa_aaaaaaaaaaaa_after.json` — Left monitor on `Display Port`
 
+## Power state & the HTTP 409 (`ConflictError: invalid device state`)
+
+Seen in the wild (14 Jul 2026): a `toggle` failed with **HTTP 409 `ConflictError —
+invalid device state`** on `POST /commands`. At that moment both panels reported
+`switch: off` (standby — the work Mac driving them had been asleep for hours), health
+`ONLINE`, `samsungvd.thingStatus: Idle`.
+
+**What's established:** an asleep panel can reject `setInputSource` with 409.
+
+**What is NOT established:** that `switch: off` alone causes it. Powering a panel off via
+the API (`switch` → `off`) and then issuing `setInputSource` **succeeds** — no 409. So
+the real trigger is a *deeper* standby than an API-initiated power-off, and it can't be
+forced on demand. Treat the exact condition as unconfirmed.
+
+**Mitigation implemented** (belt and braces, in `switcher.py`):
+1. Read the `switch` capability alongside the input; if the panel is `off`, send
+   `switch: on` and poll until it confirms, *then* change the input.
+2. If a 409 comes back anyway, treat it as "asleep": power on and retry the input once.
+3. Per-monitor error isolation — an API failure on one panel no longer aborts the other
+   (previously the 409 on `left` meant `right` was never even attempted).
+
+Verified: with a panel powered off, `switch_monitor` wakes it and completes the switch
+(`was_off=True powered_on=True verified=True`). The mitigation is sound and harmless;
+whether it fully cures the original deep-standby 409 will be confirmed the next time the
+panels sit in real standby.
+
 ## Notes / caveats
 
 - **Auth:** discovery used a throwaway PAT. PATs expire 24h after creation (and a

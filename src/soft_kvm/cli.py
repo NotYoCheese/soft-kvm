@@ -103,20 +103,33 @@ def _render_switch_summary(summary: switcher.SwitchSummary) -> None:
     table.add_column("Desired")
     table.add_column("Result")
     for result in summary.results:
-        if result.already_on_target:
-            outcome = "[green]already on target[/]"
-        elif summary.dry_run:
-            outcome = "[yellow]would set[/]"
-        elif result.verified:
-            outcome = "[bold green]switched ✓[/]"
-        else:
+        if result.error is not None:
             outcome = "[bold red]FAILED[/]"
-        table.add_row(result.name, str(result.before), result.desired_source, outcome)
+        elif summary.dry_run:
+            woke = "would power on + " if result.was_off else ""
+            outcome = (
+                f"[green]{woke}already on target[/]"
+                if result.already_on_target
+                else f"[yellow]{woke}would set[/]"
+            )
+        elif result.verified:
+            woke = "woke + " if result.powered_on else ""
+            done = "already on target" if result.already_on_target else "switched ✓"
+            outcome = f"[bold green]{woke}{done}[/]"
+        else:
+            outcome = "[bold red]not verified[/]"
+        before = str(result.before) + (" [dim](off)[/]" if result.was_off else "")
+        table.add_row(result.name, before, result.desired_source, outcome)
     console.print(table)
+
+    for result in summary.results:
+        if result.error is not None:
+            err_console.print(f"[bold red]{result.name}:[/] {result.error}")
+
     if summary.partial_failure:
         err_console.print(
             "[bold red]Partial failure:[/] some monitors reached the target and others "
-            "did not (see table). The unreached panel may be offline or the source name wrong."
+            "did not (see above)."
         )
     elif not summary.dry_run and not summary.ok:
         err_console.print("[bold red]No monitor reached the target.[/]")
@@ -150,13 +163,24 @@ def personal(ctx: typer.Context) -> None:
 def _render_status(statuses: list[switcher.MonitorStatus]) -> None:
     table = Table(title="Monitor status")
     table.add_column("Monitor")
+    table.add_column("Power")
     table.add_column("Current source")
     table.add_column("Target")
     for monitor in statuses:
         target = monitor.target or "[dim]unknown[/]"
         current = monitor.current if monitor.current is not None else "[dim]unavailable[/]"
-        table.add_row(monitor.name, current, target)
+        if monitor.power == "off":
+            power = "[yellow]off[/]"
+        elif monitor.power is None:
+            power = "[dim]?[/]"
+        else:
+            power = monitor.power
+        table.add_row(monitor.name, power, current, target)
     console.print(table)
+    if any(m.power == "off" for m in statuses):
+        console.print(
+            "[dim]A panel that is off will be powered on automatically before switching.[/]"
+        )
     overall = switcher.current_target(statuses) or "mixed / unknown"
     console.print(f"Overall: [bold]{overall}[/]")
 

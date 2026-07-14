@@ -19,6 +19,25 @@ def build_command_body(capability: str, source: str) -> dict[str, Any]:
     }
 
 
+def build_switch_command(*, on: bool) -> dict[str, Any]:
+    """The ``switch`` capability on/off command body.
+
+    An asleep S9 can reject ``setInputSource`` with HTTP 409 ("invalid device state"),
+    so the switcher wakes a panel that reports ``switch: off`` before changing its input
+    (and retries once after a power-on if a 409 shows up anyway).
+    """
+    return {
+        "commands": [
+            {
+                "component": "main",
+                "capability": "switch",
+                "command": "on" if on else "off",
+                "arguments": [],
+            }
+        ]
+    }
+
+
 def command_accepted(response: dict[str, Any]) -> bool:
     """Whether the command POST was accepted by the cloud (NOT that the input changed).
 

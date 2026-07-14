@@ -30,6 +30,11 @@ _STATUS_HINTS: dict[int, str] = {
         "Forbidden — the PAT is valid but lacks the required scopes. "
         "Need at least: list/see devices (r:devices:*) and control (x:devices:*)."
     ),
+    409: (
+        "Conflict ('invalid device state') — the monitor is almost certainly powered "
+        "off/in standby. A panel that is off will not accept setInputSource; power it "
+        "on first (soft-kvm does this automatically)."
+    ),
     429: "Rate limited — back off before retrying.",
 }
 
@@ -116,7 +121,7 @@ def request_json(
         raise ApiError(f"{method} {url} request failed: {exc!r}") from exc
 
     if not resp.is_success:
-        raise ApiError(_format_http_error(resp))
+        raise ApiError(_format_http_error(resp), status_code=resp.status_code)
 
     try:
         data = resp.json()

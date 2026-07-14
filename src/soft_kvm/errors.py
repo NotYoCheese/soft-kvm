@@ -25,5 +25,12 @@ class ApiError(SoftKvmError):
     """A SmartThings API call returned an unexpected status or body.
 
     The message includes the request, status code, and response body so an
-    unexpected response is surfaced rather than papered over.
+    unexpected response is surfaced rather than papered over. ``status_code`` is
+    set for HTTP failures (``None`` for transport/decode errors) so callers can
+    react to specific statuses — e.g. 409 ``ConflictError`` meaning the panel is
+    powered off and can't accept an input change.
     """
+
+    def __init__(self, message: str, *, status_code: int | None = None) -> None:
+        super().__init__(message)
+        self.status_code = status_code

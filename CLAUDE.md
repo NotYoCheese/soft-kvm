@@ -41,6 +41,13 @@ Phase 1 commands (idempotent + verified):
 - `uv run soft-kvm toggle` — read state, flip to the other target.
 - `uv run soft-kvm --dry-run <cmd>` — global; report what would change, send nothing.
 
+**Power/409 (important):** an asleep panel can reject `setInputSource` with HTTP 409
+(`ConflictError: invalid device state`). The switcher reads the `switch` capability, wakes
+a panel that is `off` before changing its input, and retries once on a 409. NB: an
+API-initiated `switch: off` does NOT reproduce the 409 — the real trigger is a deeper
+standby that can't be forced, so the exact condition is unconfirmed (see `docs/FINDINGS.md`).
+Per-monitor errors are captured on the result, never raised, so one panel can't abort the other.
+
 Phase 0 utilities (still present, for diagnostics):
 - `uv run soft-kvm discover` — enumerate devices, dump capability + state, save fixtures.
 - `uv run soft-kvm test-switch --device-id <id> --source "<id>"` — confirmation-gated

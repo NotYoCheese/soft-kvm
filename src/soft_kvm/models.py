@@ -101,6 +101,22 @@ def _attr_value(block: dict[str, Any], attribute: str) -> Any:
     return attr.get("value") if isinstance(attr, dict) else None
 
 
+def extract_power(status: dict[str, Any]) -> str | None:
+    """Return the ``switch`` capability value (``"on"`` / ``"off"``), or None if absent.
+
+    A panel reporting ``"off"`` (standby) rejects ``setInputSource`` with HTTP 409, so
+    the switcher checks this and powers the panel on first.
+    """
+    main = status.get("components", {}).get("main", {})
+    if not isinstance(main, dict):
+        return None
+    block = main.get("switch")
+    if not isinstance(block, dict):
+        return None
+    value = _attr_value(block, "switch")
+    return str(value) if value is not None else None
+
+
 def extract_input_source(status: dict[str, Any]) -> InputSourceState | None:
     """Pull the input-source state out of a ``GET /v1/devices/{id}/status`` body.
 

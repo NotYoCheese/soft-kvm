@@ -61,6 +61,12 @@ too. Full setup + latency notes: **`docs/PHASE3_HOTKEY.md`**.
 scripts/toggle-monitors.sh status   # test the launcher (read-only)
 ```
 
+## Multiple machines & phone fallback
+
+Run soft-kvm on both Macs (each with its own hotkey) plus an iPhone fallback, so you can
+always reclaim the monitors — even when a rebooting Mac has grabbed them and the machine
+you want has no visible screen. Setup + recovery playbook: **`docs/MULTI_MACHINE.md`**.
+
 ## Phase 0 — discovery
 
 1. Generate a **throwaway** SmartThings Personal Access Token at
